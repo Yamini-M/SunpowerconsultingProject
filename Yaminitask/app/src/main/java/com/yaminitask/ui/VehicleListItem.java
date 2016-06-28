@@ -6,9 +6,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
 import com.yaminitask.R;
-import com.yaminitask.model.Inventory;
+import com.yaminitask.model.Make;
 
 /**
  * Created by manasal on 28/06/16.
@@ -40,9 +39,10 @@ public class VehicleListItem extends LinearLayout {
         manufacturedYear = (TextView) findViewById(R.id.year_manufactured);
     }
 
-    public void populateViewWith(Context context, Inventory inventory){
-        String supplierLogoUrl = inventory.getMedia().getPhotos().getThumbnails().getLinks().get(0).getHref();
-        Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
-
+    public void populateViewWith(Context context, Make make){
+//        String supplierLogoUrl = inventory.getMedia().getPhotos().getThumbnails().getLinks().get(0).getHref();
+//        Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
+        carNameTextView.setText(make.getName());
+        manufacturedYear.setText("Manufactured year: "+make.getModels().get(0).getYears().get(0).getYear());
     }
 }

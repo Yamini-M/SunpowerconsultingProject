@@ -198,7 +198,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<AllCarMakes> call, Response<AllCarMakes> response) {
                     AllCarMakes allCarMakes = response.body();
-                    System.out.println(allCarMakes.getMakesCount());
+                    startActivity(CarsListActivity.packIntent(LoginActivity.this, allCarMakes));
                 }
 
                 @Override

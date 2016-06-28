@@ -1,19 +1,33 @@
 package com.yaminitask;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
+
+import com.yaminitask.model.AllCarMakes;
+import com.yaminitask.ui.VehicleListItem;
 
 /**
  * Created by manasal on 28/06/16.
  */
 public class CarsListFragment extends Fragment {
 
-    private ListView vehiclesList;
+    private ListView mVehiclesList;
+    private AllCarMakes mAllCarMakes;
+
+    public static CarsListFragment getInstance(AllCarMakes allCarMakes){
+        CarsListFragment fragment = new CarsListFragment();
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("allCars", allCarMakes);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
 
     @Nullable
     @Override
@@ -24,7 +38,46 @@ public class CarsListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        vehiclesList = (ListView) view.findViewById(android.R.id.list);
+        mVehiclesList = (ListView) view.findViewById(android.R.id.list);
+        mAllCarMakes = (AllCarMakes) getArguments().get("allCars");
+        mVehiclesList.setAdapter(new VehicleAdapter(mAllCarMakes, getContext()));
+    }
+
+    public class VehicleAdapter extends BaseAdapter {
+
+        private AllCarMakes allCarMakes;
+        private Context context;
+
+        public VehicleAdapter(AllCarMakes allCarMakes, Context context) {
+            this.allCarMakes = allCarMakes;
+            this.context = context;
+        }
+
+        @Override
+        public int getCount() {
+            return allCarMakes.getMakes().size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return allCarMakes.getMakes().get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return i;
+        }
+
+        @Override
+        public View getView(int i, View view, ViewGroup viewGroup) {
+            LayoutInflater inflater = LayoutInflater.from(context);
+            if(view == null){
+                view = inflater.inflate(R.layout.vehicle_list_item, null);
+            }
+            VehicleListItem vehicleListItem = (VehicleListItem) view;
+            vehicleListItem.populateViewWith(context, allCarMakes.getMakes().get(i));
+            return view;
+        }
 
     }
 }

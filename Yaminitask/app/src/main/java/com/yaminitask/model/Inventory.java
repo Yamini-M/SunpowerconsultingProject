@@ -97,9 +97,5 @@ public class Inventory {
         private List<Link> links = new ArrayList<Link>();
     }
 
-    @Getter
-    public class Year {
-        private int id;
-        private int year;
-    }
+
 }
