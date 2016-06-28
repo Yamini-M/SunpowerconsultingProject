@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
 import com.yaminitask.R;
 import com.yaminitask.model.Make;
 
@@ -33,16 +34,15 @@ public class VehicleListItem extends LinearLayout {
     @Override
     protected void onFinishInflate() {
         super.onFinishInflate();
-        //TODO initialize
         supplierImage = (ImageView) findViewById(R.id.img_supplier_logo);
         carNameTextView = (TextView) findViewById(R.id.vehicle_name);
         manufacturedYear = (TextView) findViewById(R.id.year_manufactured);
     }
 
     public void populateViewWith(Context context, Make make){
-//        String supplierLogoUrl = inventory.getMedia().getPhotos().getThumbnails().getLinks().get(0).getHref();
-//        Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
-        carNameTextView.setText(make.getName());
+        String supplierLogoUrl = "https://logo.clearbit.com/"+make.getName().toLowerCase()+".com";
+        Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
+        carNameTextView.setText(make.getModels().get(0).getId().replaceAll("_", " "));
         manufacturedYear.setText("Manufactured year: "+make.getModels().get(0).getYears().get(0).getYear());
     }
 }
