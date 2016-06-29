@@ -12,16 +12,24 @@
         android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name"
             android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name=".CarsListActivity"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name=".Splash"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:label="@string/title_activity_splash"
+            android:theme="@style/FullscreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name=".CarsListActivity" android:screenOrientation="portrait"/>
+        <activity android:name=".CarDetailsActivity">
+        </activity>
     </application>
 
 </manifest>

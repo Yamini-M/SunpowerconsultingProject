@@ -7,6 +7,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -41,6 +42,12 @@ public class CarsListFragment extends Fragment {
         mVehiclesList = (ListView) view.findViewById(android.R.id.list);
         mAllCarMakes = (AllCarMakes) getArguments().get("allCars");
         mVehiclesList.setAdapter(new VehicleAdapter(mAllCarMakes, getContext()));
+        mVehiclesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                startActivity(CarDetailsActivity.packIntent(getActivity()));
+            }
+        });
     }
 
     public class VehicleAdapter extends BaseAdapter {

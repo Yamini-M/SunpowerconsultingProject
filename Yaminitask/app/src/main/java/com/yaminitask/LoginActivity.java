@@ -3,20 +3,24 @@ package com.yaminitask;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.yaminitask.api.ApiEndpointInterface;
 import com.yaminitask.model.AllCarMakes;
+import com.yaminitask.utils.SecureSharedPreferences;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -45,6 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        getSupportActionBar().setTitle("Sign In");
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) findViewById(R.id.email);
         mPasswordView = (EditText) findViewById(R.id.password);
@@ -108,8 +113,19 @@ public class LoginActivity extends AppCompatActivity {
             // Show a progress spinner, and kick off a background task to
             // perform the user login attempt.
             showProgress(true);
+            hideKeyboard();
             mAuthTask = new UserLoginTask(email, password);
             mAuthTask.execute((Void) null);
+        }
+    }
+
+    public void hideKeyboard() {
+        try {
+            InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        } catch (Exception e) {
+            // Ignore exceptions if any
+            Log.e("KeyBoardUtil", e.toString(), e);
         }
     }
 
@@ -175,14 +191,10 @@ public class LoginActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            // TODO: attempt authentication against a network service.
-
-//            try {
-                // Simulate network access.
-//                Thread.sleep(2000);
-//            } catch (InterruptedException e) {
-//                return false;
-//            }
+            //Not at all advisable to store the user id and password here but as we don't have any support currently
+            SecureSharedPreferences secureSharedPreferences = new SecureSharedPreferences(LoginActivity.this, "my-preferences", "Manas47256Secret", true);
+            secureSharedPreferences.put(SecureSharedPreferences.KEY_PASSWORD, mPassword);
+            secureSharedPreferences.put(SecureSharedPreferences.KEY_LOGIN_ID, mEmail);
 
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.edmunds.com/")
@@ -190,19 +202,19 @@ public class LoginActivity extends AppCompatActivity {
                     .build();
 
             ApiEndpointInterface apiEndpointInterface = retrofit.create(ApiEndpointInterface.class);
-
-//            Call<AllCarMakes> call = apiEndpointInterface.getMakesCall();
             Call<AllCarMakes> call = apiEndpointInterface.getMakesCall("zk3f8td9qyyzrvxmetytmzky");
-//            Call<AllCarMakes> call = apiEndpointInterface.getMakesCall("used", "2014", "zk3f8td9qyyzrvxmetytmzky");
             call.enqueue(new Callback<AllCarMakes>() {
                 @Override
                 public void onResponse(Call<AllCarMakes> call, Response<AllCarMakes> response) {
                     AllCarMakes allCarMakes = response.body();
+                    showProgress(false);
+                    finish();
                     startActivity(CarsListActivity.packIntent(LoginActivity.this, allCarMakes));
                 }
 
                 @Override
                 public void onFailure(Call<AllCarMakes> call, Throwable t) {
+                    showProgress(false);
                     System.out.println("failed");
                 }
             });
@@ -213,8 +225,6 @@ public class LoginActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(final Boolean success) {
             mAuthTask = null;
-            showProgress(false);
-
             if (success) {
 //                finish();
             }
