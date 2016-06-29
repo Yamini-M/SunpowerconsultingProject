@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.yaminitask.model.AllCarMakes;
@@ -20,6 +22,7 @@ public class CarsListFragment extends Fragment {
 
     private ListView mVehiclesList;
     private AllCarMakes mAllCarMakes;
+    private Button logoutButton;
 
     public static CarsListFragment getInstance(AllCarMakes allCarMakes){
         CarsListFragment fragment = new CarsListFragment();
@@ -41,6 +44,21 @@ public class CarsListFragment extends Fragment {
         mVehiclesList = (ListView) view.findViewById(android.R.id.list);
         mAllCarMakes = (AllCarMakes) getArguments().get("allCars");
         mVehiclesList.setAdapter(new VehicleAdapter(mAllCarMakes, getContext()));
+        mVehiclesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+            }
+        });
+
+        logoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//               LayoutInflater l = LayoutInflater.from(getContext());
+//                v= View.inflate(getContext(),R.layout.activity_login,null);
+            }
+        });
     }
 
     public class VehicleAdapter extends BaseAdapter {
