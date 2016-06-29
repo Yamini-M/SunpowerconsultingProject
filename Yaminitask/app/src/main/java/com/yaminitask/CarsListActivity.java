@@ -24,7 +24,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by manasal on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 public class CarsListActivity extends AppCompatActivity {
 

@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import lombok.Getter;
 
 /**
- * Created by jampalar on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 @Getter
 public class Year implements Parcelable {

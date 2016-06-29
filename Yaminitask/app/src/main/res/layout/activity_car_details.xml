@@ -8,10 +8,10 @@
     tools:context="com.yaminitask.CarDetailsActivity">
 
         <TextView
-            android:id="@+id/vehicle_name"
+            android:id="@+id/vehicle_name1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/img_supplier_logo"
+            android:layout_above="@+id/img_logo"
             android:text="Car Name"
             android:layout_centerInParent="true"
             android:textSize="18sp"/>
@@ -21,7 +21,7 @@
 
 
         <ImageView
-            android:id="@+id/img_supplier_logo"
+            android:id="@+id/img_logo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -32,12 +32,12 @@
             android:scaleType="fitXY"/>
 
         <TextView
-            android:id="@+id/year_manufactured"
+            android:id="@+id/year_manufactured1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="Manufactured year"
-            android:layout_toRightOf="@id/img_supplier_logo"/>
+            android:layout_toRightOf="@id/img_logo"/>
 
 
 

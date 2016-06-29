@@ -8,7 +8,7 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * Created by jampalar on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 @Getter
 public class VehicleModel implements Parcelable {

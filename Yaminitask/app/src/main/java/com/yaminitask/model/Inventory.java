@@ -6,7 +6,7 @@ import java.util.List;
 import lombok.Getter;
 
 /**
- * Created by manasal on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 @Getter
 public class Inventory {

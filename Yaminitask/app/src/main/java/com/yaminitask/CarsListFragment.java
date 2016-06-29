@@ -1,6 +1,7 @@
 package com.yaminitask;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -15,7 +16,7 @@ import com.yaminitask.model.AllCarMakes;
 import com.yaminitask.ui.VehicleListItem;
 
 /**
- * Created by manasal on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 public class CarsListFragment extends Fragment {
 
@@ -44,8 +45,12 @@ public class CarsListFragment extends Fragment {
         mVehiclesList.setAdapter(new VehicleAdapter(mAllCarMakes, getContext()));
         mVehiclesList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                startActivity(CarDetailsActivity.packIntent(getActivity()));
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                Intent in = new Intent(getActivity().getApplicationContext(), CarDetailsActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putParcelable("carMake", mAllCarMakes.getMakes().get(position));
+                in.putExtras(bundle);
+                startActivity(in);
             }
         });
     }

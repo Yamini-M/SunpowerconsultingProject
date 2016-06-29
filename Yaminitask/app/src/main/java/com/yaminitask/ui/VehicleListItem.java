@@ -11,7 +11,7 @@ import com.yaminitask.R;
 import com.yaminitask.model.Make;
 
 /**
- * Created by manasal on 28/06/16.
+ * Created by Yamini on 28/06/16.
  */
 public class VehicleListItem extends LinearLayout {
 
@@ -37,12 +37,12 @@ public class VehicleListItem extends LinearLayout {
         supplierImage = (ImageView) findViewById(R.id.img_supplier_logo);
         carNameTextView = (TextView) findViewById(R.id.vehicle_name);
         manufacturedYear = (TextView) findViewById(R.id.year_manufactured);
-    }
+        }
 
-    public void populateViewWith(Context context, Make make){
+public void populateViewWith(Context context, Make make){
         String supplierLogoUrl = "https://logo.clearbit.com/"+make.getName().toLowerCase()+".com";
         Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
         carNameTextView.setText(make.getModels().get(0).getId().replaceAll("_", " "));
         manufacturedYear.setText("Manufactured year: "+make.getModels().get(0).getYears().get(0).getYear());
-    }
-}
+        }
+        }
