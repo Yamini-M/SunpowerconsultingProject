@@ -18,8 +18,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.gson.Gson;
 import com.yaminitask.api.ApiEndpointInterface;
+import com.yaminitask.database.DataBaseHandler;
 import com.yaminitask.model.AllCarMakes;
+import com.yaminitask.utils.EngineUtils;
 import com.yaminitask.utils.SecureSharedPreferences;
 
 import retrofit2.Call;
@@ -122,7 +125,9 @@ public class LoginActivity extends AppCompatActivity {
     public void hideKeyboard() {
         try {
             InputMethodManager inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            if(getCurrentFocus() != null) {
+                inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
         } catch (Exception e) {
             // Ignore exceptions if any
             Log.e("KeyBoardUtil", e.toString(), e);
@@ -195,7 +200,29 @@ public class LoginActivity extends AppCompatActivity {
             SecureSharedPreferences secureSharedPreferences = new SecureSharedPreferences(LoginActivity.this, "my-preferences", "Manas47256Secret", true);
             secureSharedPreferences.put(SecureSharedPreferences.KEY_PASSWORD, mPassword);
             secureSharedPreferences.put(SecureSharedPreferences.KEY_LOGIN_ID, mEmail);
+            if (EngineUtils.haveNetworkConnection(LoginActivity.this)) {
+                doAllMakes();
+            } else {
+                DataBaseHandler dataBaseHandler = new DataBaseHandler(LoginActivity.this);
+                AllCarMakes allCarMakes = new Gson().fromJson(dataBaseHandler.getAllCarMakes(), AllCarMakes.class);
+                if(allCarMakes != null){
+                    startActivity(CarsListActivity.packIntent(LoginActivity.this, allCarMakes));
+                }
+            }
 
+
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            if (success) {
+//                finish();
+            }
+        }
+
+        private void doAllMakes(){
             Retrofit retrofit = new Retrofit.Builder()
                     .baseUrl("https://api.edmunds.com/")
                     .addConverterFactory(GsonConverterFactory.create())
@@ -208,6 +235,8 @@ public class LoginActivity extends AppCompatActivity {
                 public void onResponse(Call<AllCarMakes> call, Response<AllCarMakes> response) {
                     AllCarMakes allCarMakes = response.body();
                     showProgress(false);
+                    DataBaseHandler dataBaseHandler = new DataBaseHandler(LoginActivity.this);
+                    dataBaseHandler.addAllCarMakes(new Gson().toJson(allCarMakes));
                     finish();
                     startActivity(CarsListActivity.packIntent(LoginActivity.this, allCarMakes));
                 }
@@ -218,16 +247,6 @@ public class LoginActivity extends AppCompatActivity {
                     System.out.println("failed");
                 }
             });
-
-            return true;
-        }
-
-        @Override
-        protected void onPostExecute(final Boolean success) {
-            mAuthTask = null;
-            if (success) {
-//                finish();
-            }
         }
 
         @Override

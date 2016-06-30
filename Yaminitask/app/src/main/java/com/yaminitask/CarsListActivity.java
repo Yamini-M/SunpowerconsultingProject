@@ -5,6 +5,8 @@ import android.animation.AnimatorListenerAdapter;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,7 +15,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.google.gson.Gson;
 import com.yaminitask.api.ApiEndpointInterface;
+import com.yaminitask.database.DataBaseHandler;
 import com.yaminitask.model.AllCarMakes;
 import com.yaminitask.utils.SecureSharedPreferences;
 
@@ -50,15 +54,44 @@ public class CarsListActivity extends AppCompatActivity {
 
     private void unpackIntent() {
         allCarMakes = getIntent().getParcelableExtra("allCars");
-        if(allCarMakes != null) {
-            CarsListFragment carsListFragment = CarsListFragment.getInstance(allCarMakes);
-            getSupportFragmentManager().beginTransaction().add(R.id.root_layout, carsListFragment).commit();
+        if (allCarMakes != null) {
+            addCarListFragment(allCarMakes);
         } else {
-            init();
+            if (haveNetworkConnection()) {
+                init();
+            } else {
+                DataBaseHandler dataBaseHandler = new DataBaseHandler(this);
+                allCarMakes = new Gson().fromJson(dataBaseHandler.getAllCarMakes(), AllCarMakes.class);
+                if(allCarMakes != null){
+                    addCarListFragment(allCarMakes);
+                }
+            }
         }
     }
-    
-    private void init(){
+
+    private boolean haveNetworkConnection() {
+        boolean haveConnectedWifi = false;
+        boolean haveConnectedMobile = false;
+
+        ConnectivityManager cm = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo[] netInfo = cm.getAllNetworkInfo();
+        for (NetworkInfo ni : netInfo) {
+            if (ni.getTypeName().equalsIgnoreCase("WIFI"))
+                if (ni.isConnected())
+                    haveConnectedWifi = true;
+            if (ni.getTypeName().equalsIgnoreCase("MOBILE"))
+                if (ni.isConnected())
+                    haveConnectedMobile = true;
+        }
+        return haveConnectedWifi || haveConnectedMobile;
+    }
+
+    private void addCarListFragment(AllCarMakes allCarMakes) {
+        CarsListFragment carsListFragment = CarsListFragment.getInstance(allCarMakes);
+        getSupportFragmentManager().beginTransaction().add(R.id.root_layout, carsListFragment).commit();
+    }
+
+    private void init() {
         showProgress(true);
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("https://api.edmunds.com/")
