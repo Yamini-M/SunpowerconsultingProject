@@ -18,6 +18,7 @@ public class VehicleListItem extends LinearLayout {
     private ImageView supplierImage;
     private TextView carNameTextView;
     private TextView manufacturedYear;
+    private TextView modelCount;
 
     public VehicleListItem(Context context) {
         super(context);
@@ -37,12 +38,14 @@ public class VehicleListItem extends LinearLayout {
         supplierImage = (ImageView) findViewById(R.id.img_supplier_logo);
         carNameTextView = (TextView) findViewById(R.id.vehicle_name);
         manufacturedYear = (TextView) findViewById(R.id.year_manufactured);
-        }
+        modelCount = (TextView) findViewById(R.id.model_count);
+    }
 
-public void populateViewWith(Context context, Make make){
-        String supplierLogoUrl = "https://logo.clearbit.com/"+make.getName().toLowerCase()+".com";
+    public void populateViewWith(Context context, Make make) {
+        String supplierLogoUrl = "https://logo.clearbit.com/" + make.getName().toLowerCase() + ".com";
         Picasso.with(context).load(supplierLogoUrl).into(supplierImage);
-        carNameTextView.setText(make.getModels().get(0).getId().replaceAll("_", " "));
-        manufacturedYear.setText("Manufactured year: "+make.getModels().get(0).getYears().get(0).getYear());
-        }
-        }
+        carNameTextView.setText(make.getName());
+        manufacturedYear.setText("Manufactured year: " + make.getModels().get(0).getYears().get(0).getYear());
+        modelCount.setText("Models: " + make.getModels().size());
+    }
+}
